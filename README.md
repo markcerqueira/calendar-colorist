@@ -6,7 +6,8 @@
 1. Turn on the Google Calendar API as shown in [Step 1 of Google's Java Quickstart Guide][1]. 
 Download the `credentials.json` file and place it in `calendar-colorist/src/main/java src/main/resources`.
 1. Modify `EventCategory.kt` to define your event categories and the desired colors for each of those categories. 
-Modify `classify` in `EventClassifier.kt` to return an EventCategory based on information from the given Event.
+`CalendarColor.kt` lists all available colors. 
+1. Modify `classify` in `EventClassifier.kt` to return an EventCategory based on information from the given Event.
 1. CalendarColorist will only look at events between now and seven days into the future. 
 The intent here is that you'll run this on Monday to configure your week. 
 If you want to modify this behavior look at the `main` method in `CalendarColorist.kt`.

@@ -36,9 +36,11 @@ object CalendarColorist {
                 }
 
                 // Add duration of event to our map tracking category -> time spent
-                categoryTimeSpentMap.put(it, categoryTimeSpentMap.getOrDefault(it, 0) + event.durationInMinutes)
+                categoryTimeSpentMap[it] = categoryTimeSpentMap.getOrDefault(it, 0) + event.durationInMinutes
+
+                // https://twitter.com/heathborders/status/1213938020392558592
+                Unit
             } ?: run {
-                // TODO This is printing even when EventClassifier.classify above returns non-null
                 println("\tEvent could not be classified by EventClassifier!")
             }
         }
