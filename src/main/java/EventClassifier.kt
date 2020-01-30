@@ -7,7 +7,7 @@ import com.google.api.services.calendar.model.Event
  */
 object EventClassifier {
 
-    fun classify(event: Event): EventCategory? {
+    fun classify(event: Event): EventCategory {
         return when {
             // 1:1s
             event.summary.containsFromSet("/ Mark 1:1", "Ned") -> EventCategory.OneOnOne
@@ -34,7 +34,7 @@ object EventClassifier {
             event.summary.containsFromSet("Mobile", "Midnight Commander X", "Release Planning", "Weekly Documents Update", "Monday Manager Tasks") -> EventCategory.Mobile
             event.creatorUsername in setOf("perezmin", "ravirani") -> EventCategory.Mobile
 
-            else -> null
+            else -> EventCategory.Unclassified
         }
     }
 }

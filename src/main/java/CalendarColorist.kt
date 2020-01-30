@@ -23,25 +23,29 @@ object CalendarColorist {
             if (event.startTimeSinceEpoch > System.currentTimeMillis() + SEVEN_DAYS_MILLISECONDS) {
                 break
             }
+			
+			// Skip categorizing all-day events
+			if (event.isWholeDayEvent) {
+				println("${event.summary} - created by ${event.creatorUsername} is an all-day event; skipping classification")
+				continue
+			}
 
-            println("${event.summary} - created by ${event.creatorUsername} lasting ${event.durationInMinutes} minutes:")
+            val classification = EventClassifier.classify(event)
 
-            EventClassifier.classify(event)?.let {
-                println("\tEvent classified as $it")
+            println("${event.summary} - created by ${event.creatorUsername} (${event.durationInMinutes} mins) classified as: $classification")
 
+            // Since the Unclassified category has a null calendarColor unclassified events will never have their color modified
+            classification.calendarColor?.let {
                 // Only update the color on Google Calendar if it's not correct
-                if (event.colorId != it.calendarColor.colorId) {
-                    event.setColor(it.calendarColor)
+                if (event.colorId != it.colorId) {
+                    event.setColor(it)
                     GoogleCalendar.patchEvent(event)
                 }
+            }
 
-                // Add duration of event to our map tracking category -> time spent
-                categoryTimeSpentMap[it] = categoryTimeSpentMap.getOrDefault(it, 0) + event.durationInMinutes
-
-                // https://twitter.com/heathborders/status/1213938020392558592
-                Unit
-            } ?: run {
-                println("\tEvent could not be classified by EventClassifier!")
+            // Add duration of event to our map tracking category -> time spent but only for events marked as attending
+            if (event.isAttending("markcerq")) {
+	            categoryTimeSpentMap[classification] = categoryTimeSpentMap.getOrDefault(classification, 0) + event.durationInMinutes                
             }
         }
 
